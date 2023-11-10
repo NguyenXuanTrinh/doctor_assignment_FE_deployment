@@ -1,17 +1,5 @@
-/* const BASE_URL = "...."; */
+const BASE_URL = "https://doctor-assignment-be-deployment.vercel.app/api/";
 
-// example API
-/* const refreshTokenAPI = `auth/refresh-token`;
-const loginAPI = `auth/authenticate`;
-const logoutAPI = `auth/logout`;
-const registerAPI = `auth/register`;
-const getUserInfoAPI = `common/user-info`; */
+const loginAPI = `user/login`;
 
-/* export {
-  BASE_URL,
-  loginAPI,
-  logoutAPI,
-  registerAPI,
-  getUserInfoAPI,
-  refreshTokenAPI,
-}; */
+export { BASE_URL, loginAPI };

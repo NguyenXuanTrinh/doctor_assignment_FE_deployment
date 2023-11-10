@@ -1,8 +1,9 @@
 export const PATH = Object.freeze({
+  HOME: "/",
   DASHBOARD: "/dashboard",
-  TAB1: "/dashboard/tab1",
-  TAB2: "/dashboard/tab2",
-  TAB3: "/dashboard/tab3",
+  MEDICAL_CENTER_FINDER: "/dashboard/medical-center-finder",
+  PROFILE: "/dashboard/profile",
+  APPOINTMENT: "/dashboard/appointment",
 
   UNAUTHORIZED: "/unauthorized",
   FORBIDDEN: "/forbidden",

@@ -1,15 +1,22 @@
 import { LOCAL_ITEM } from "./constant";
 
-export const setToken = (token) => {
+export const setLocalToken = (token) => {
   if (token) {
-    localStorage.setItem(LOCAL_ITEM.ACCESS_TOKEN, token.access_token);
-    localStorage.setItem(LOCAL_ITEM.REFRESH_TOKEN, token.refresh_token);
+    localStorage.setItem(LOCAL_ITEM.ACCESS_TOKEN, token.accessToken);
+  }
+};
+
+export const setSessionToken = (token) => {
+  if (token) {
+    sessionStorage.setItem(LOCAL_ITEM.ACCESS_TOKEN, token.accessToken);
   }
 };
 
 export const removeToken = () => {
   localStorage.removeItem(LOCAL_ITEM.ACCESS_TOKEN);
   localStorage.removeItem(LOCAL_ITEM.REFRESH_TOKEN);
+  sessionStorage.removeItem(LOCAL_ITEM.ACCESS_TOKEN);
+  sessionStorage.removeItem(LOCAL_ITEM.REFRESH_TOKEN);
 };
 
 export const setUserInfo = (userInfo) => {

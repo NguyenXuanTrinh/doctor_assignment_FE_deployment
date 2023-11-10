@@ -2,18 +2,19 @@ import { PATH } from "./paths";
 import RequireAuth from "./RequireAuth";
 
 import {
+  LoginPage,
   Dashboard,
-  Tab1,
-  Tab2,
-  Tab3,
+  MedicalFinder,
+  Profile,
   Unauthorized,
   Forbidden,
   NotFound,
+  Appointment,
 } from "../pages/pages";
 
 export const routes = [
   {
-    element: <Dashboard />,
+    element: <LoginPage />,
     path: "/",
   },
   {
@@ -21,16 +22,16 @@ export const routes = [
     path: PATH.DASHBOARD,
     children: [
       {
-        path: PATH.TAB1,
-        element: <Tab1 />,
+        path: PATH.MEDICAL_CENTER_FINDER,
+        element: <MedicalFinder />,
       },
       {
-        path: PATH.TAB2,
-        element: <Tab2 />,
+        path: PATH.PROFILE,
+        element: <Profile />,
       },
       {
-        path: PATH.TAB3,
-        element: <Tab3 />,
+        path: PATH.APPOINTMENT,
+        element: <Appointment />,
       },
     ],
   },
