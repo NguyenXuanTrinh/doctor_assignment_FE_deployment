@@ -8,21 +8,25 @@ import {
 import { Layout, Button, theme, notification } from "antd";
 import { MenuDashboard } from "../../components/StyledComponent";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { PATH } from "../../route/paths";
+import { PATH } from "../paths";
+import { useAuth } from "../../context/AuthProvider";
+import { logoutSuccess } from "../../stores/reducer/authSlice";
+import { useDispatch } from "react-redux";
 
 const { Header, Sider, Content } = Layout;
 
 const Dashboard = () => {
+  const { userInfo } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
   useEffect(() => {
-    console.log(location.pathname);
     if (location.pathname === "/dashboard") {
       navigate(PATH.MEDICAL_CENTER_FINDER);
     }
@@ -101,11 +105,12 @@ const Dashboard = () => {
             />
             <div className="flex items-center gap-[20px]">
               <div>
-                Hi, <span className="font-semibold">Quang Minh</span>
+                Hi, <span className="font-semibold">{userInfo?.fullName}</span>
               </div>
               <Button
                 className="mr-6  rounded"
                 onClick={() => {
+                  dispatch(logoutSuccess());
                   navigate(PATH.HOME);
                   notification.success({
                     message: "Success",

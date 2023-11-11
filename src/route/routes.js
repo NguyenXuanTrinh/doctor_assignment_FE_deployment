@@ -1,4 +1,4 @@
-import { PATH } from "./paths";
+import { PATH } from "../pages/paths";
 import RequireAuth from "./RequireAuth";
 
 import {
@@ -18,7 +18,11 @@ export const routes = [
     path: "/",
   },
   {
-    element: <Dashboard />,
+    element: (
+      <RequireAuth>
+        <Dashboard />
+      </RequireAuth>
+    ),
     path: PATH.DASHBOARD,
     children: [
       {

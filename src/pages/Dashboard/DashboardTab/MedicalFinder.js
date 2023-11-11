@@ -17,21 +17,20 @@ import {
 } from "../../../components/StyledComponent";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { PATH } from "../../../route/paths";
+import { PATH } from "../../paths";
+import { useAuth } from "../../../context/AuthProvider";
+import http from "../../../ultils/httpConfig";
 
 const MedicalFinder = () => {
+  const { userInfo } = useAuth();
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState({
     lat: 10.811596857085577,
     lng: 106.62712326427012,
   });
+  const [hospital, setHospital] = useState([]);
   const [address, setAddress] = useState("");
-  const [disease, setDisease] = useState([
-    "disease A",
-    "disease B",
-    "disease C",
-    "disease D",
-  ]);
+  const [disease, setDisease] = useState([]);
   const [name, setName] = useState("");
   const inputRef = useRef(null);
   const navigate = useNavigate();
@@ -53,8 +52,37 @@ const MedicalFinder = () => {
 
   const onFinish = (values) => {
     console.log("Form data:", values);
+    http
+      .post("/hospital/recommend", {
+        symptoms: values.disease,
+        address: [position.lng, position.lat],
+      })
+      .then((response) => {
+        console.log({
+          symptoms: values.disease,
+          address: [position.lng, position.lat],
+        });
+        const data = response.data.messagse;
+        console.log(data);
+        setHospital(
+          data?.map((item) => [
+            ...hospital,
+            {
+              hospitalName: item.name,
+              hospitalAddress: [item.address[0], item.address[1]],
+            },
+          ])
+        );
+      })
+      .catch((e) => console.log(e.message));
     setStep(step + 1);
   };
+
+  useEffect(() => {
+    console.log(hospital);
+  }, [hospital]);
+
+  const [seletedHospital, setSelectedHospital] = useState();
 
   useEffect(() => {
     const apiUrl = `https://geocode.maps.co/reverse?lat=${position.lat}&lon=${position.lng}`;
@@ -72,12 +100,6 @@ const MedicalFinder = () => {
   }, [position]);
 
   ///////// FORM 2
-  const [hospital, setHospital] = useState([
-    "hospital A",
-    "hospital B",
-    "hospital C",
-    "hospital D",
-  ]);
 
   const onFinishStep2 = (values) => {
     console.log("Form data:", values);
@@ -87,6 +109,13 @@ const MedicalFinder = () => {
     });
     navigate(PATH.APPOINTMENT);
   };
+
+  useEffect(() => {
+    http.get("/symptom").then((response) => {
+      const data = response.data.messagse;
+      setDisease(data?.map((item) => [...disease, item.diseaseName]));
+    });
+  }, []);
 
   return (
     <>
@@ -218,8 +247,8 @@ const MedicalFinder = () => {
                       </>
                     )}
                     options={disease.map((item) => ({
-                      label: item,
-                      value: item,
+                      label: item[0],
+                      value: item[0],
                     }))}
                   />
                 </Form.Item>
@@ -325,10 +354,11 @@ const MedicalFinder = () => {
                   ]}
                 >
                   <Select
+                    onChange={(options) => setSelectedHospital(options)}
                     placeholder="Choose the hospital"
                     options={hospital?.map((item) => ({
-                      label: item,
-                      value: item,
+                      label: item[0].hospitalName,
+                      value: item[0].hospitalName,
                     }))}
                   />
                 </Form.Item>

@@ -1,28 +1,54 @@
 import React from "react";
 import { Form, Input, Checkbox, notification } from "antd";
 import { FormLogin } from "../components/StyledComponent";
-import authService from "../services/authService";
 import { useNavigate } from "react-router-dom";
-import { PATH } from "../route/paths";
+import { PATH } from "../pages/paths";
+import http from "../ultils/httpConfig";
+import { loginAPI } from "../ultils/apiURL";
+import { setLocalToken, setSessionToken } from "../ultils/helpFunc";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../stores/reducer/authSlice";
 
 const LoginForm = ({ setRegister }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const onFinish = (values) => {
-    /* authService
-      .login({ phone: values.phone, password: values.password })
-      .then((response) => {
-        console.log(response.data);
+    http
+      .post(loginAPI, {
+        phoneNumber: values.phone,
+        password: values.password,
       })
-      .catch((error) => {
-        console.error("Lỗi khi gọi API:", error);
-      }); */
-
-    console.log(values);
-    navigate(PATH.MEDICAL_CENTER_FINDER);
-    notification.success({
-      message: "Success",
-      description: "Login successfully!",
-    });
+      .then((response) => {
+        const data = response.data.result;
+        const token = response.data.token;
+        if (values.remember) {
+          setLocalToken(token);
+        } else {
+          setSessionToken(token);
+        }
+        dispatch(
+          loginSuccess({
+            userInfo: {
+              fullName: data.name,
+              gender: data.gender,
+              address: data.address ? [data.address[0], data.address[1]] : [],
+              dob: data.dob,
+              phone: data.phoneNumber,
+            },
+          })
+        );
+        navigate(PATH.MEDICAL_CENTER_FINDER);
+        notification.success({
+          message: "Success",
+          description: "Login successfully!",
+        });
+      })
+      .catch((e) =>
+        notification.error({
+          message: "Error",
+          description: "Phone or password is not correct!",
+        })
+      );
   };
 
   const validatePhone = (rule, value, callback) => {

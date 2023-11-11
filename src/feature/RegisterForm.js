@@ -1,6 +1,6 @@
 import React from "react";
 import { FormLogin } from "../components/StyledComponent";
-import { DatePicker, Form, Input, notification } from "antd";
+import { DatePicker, Form, Input, Radio, notification } from "antd";
 
 const RegisterForm = ({ setRegister }) => {
   const onFinish = (values) => {
@@ -49,14 +49,6 @@ const RegisterForm = ({ setRegister }) => {
           </Form.Item>
         </div>
         <div className="w-6/12">
-          <Form.Item label="Address: " name="address">
-            <Input placeholder="Type your address" />
-          </Form.Item>
-        </div>
-      </div>
-
-      <div className="flex gap-[20px]">
-        <div className="w-6/12">
           <Form.Item
             label="Full name: "
             name="fullName"
@@ -70,14 +62,9 @@ const RegisterForm = ({ setRegister }) => {
             <Input placeholder="Type your name" />
           </Form.Item>
         </div>
-        <div className="w-6/12">
-          <Form.Item label="Date of birth: " name="dob">
-            <DatePicker />
-          </Form.Item>
-        </div>
       </div>
 
-      <div className="flex gap-[20px] mb-4 ">
+      <div className="flex gap-[20px]">
         <div className="w-6/12">
           <Form.Item
             label="Password: "
@@ -107,7 +94,21 @@ const RegisterForm = ({ setRegister }) => {
           </Form.Item>
         </div>
       </div>
-
+      <div className="flex gap-[20px] mb-4 ">
+        <div className="w-6/12">
+          <Form.Item label="Date of birth: " name="dob">
+            <DatePicker />
+          </Form.Item>
+        </div>
+        <div className="w-6/12">
+          <Form.Item label="Gender: " name="gender">
+            <Radio.Group>
+              <Radio value="male">Male</Radio>
+              <Radio value="female">Female</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </div>
+      </div>
       <Form.Item>
         <button
           type="submit"

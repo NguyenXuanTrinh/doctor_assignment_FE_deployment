@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ContainerLogin, WrapperLogin } from "../components/StyledComponent";
 import LoginForm from "../feature/LoginForm";
 import RegisterForm from "../feature/RegisterForm";
+import { useSelector } from "react-redux";
+import { selectAuth } from "../stores/reducer/authSlice";
+import { useNavigate } from "react-router-dom";
+import { notification } from "antd";
 
 const LoginPage = () => {
   const [register, setRegister] = useState(false);
+  const { isLoggedIn } = useSelector(selectAuth);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+      notification.error({
+        message: "Error",
+        description: "You was loggedIn!",
+      });
+    }
+  }, []);
   return (
     <WrapperLogin>
       <ContainerLogin>
