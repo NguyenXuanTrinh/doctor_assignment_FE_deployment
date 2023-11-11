@@ -10,7 +10,7 @@ const Appointment = () => {
   const { userInfo } = useAuth();
   const [address, setAddress] = useState([]);
   useEffect(() => {
-    if (userInfo.phone) {
+    if (userInfo?.phone) {
       http
         .post(getAppoinmentAPI, {
           phoneNumber: userInfo.phone,
@@ -54,8 +54,7 @@ const Appointment = () => {
       {appoinment?.map((item, index) => {
         const timeAgo = moment(item.date).fromNow();
         const date = moment(item.date).format("DD/MM/YYYY");
-        const medicalRecord =
-          "Tiền sử bệnh cá nhân: Bao gồm thông tin chi tiết về tất cả những vấn đề sức khỏe mà người bệnh trãi qua trong lịch sử cuộc sống của họ. Cần thiết khai thác chi tiết về các bất thường về sức khỏe. Nếu có, thời gian phát hiện bệnh, nếu là bệnh mạn tính, việc chi tiết về điều trị: Thuốc, sự tuân thủ điều trị và các hỗ trợ qua chế độ ăn, thói quen sinh hoạt của bệnh nhân là rất quan trọng.";
+        const medicalRecord = item.medicalRecord;
         const disease = item.symptomsList;
         return (
           <div className="mb-6 px-6 py-8 border border-[#c3c3c3] rounded">
