@@ -126,7 +126,7 @@ const Profile = () => {
             htmlType="submit"
             style={{ background: "#1677ff" }}
           >
-            Continue
+            Update
           </Button>
         </Form.Item>
       </FormInput>

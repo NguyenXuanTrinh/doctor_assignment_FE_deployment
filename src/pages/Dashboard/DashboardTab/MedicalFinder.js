@@ -102,7 +102,6 @@ const MedicalFinder = () => {
   ///////// FORM 2
 
   const onFinishStep2 = (values) => {
-    console.log("Form data:", values);
     notification.success({
       message: "Success",
       description: "Make a appointment successfully!",
@@ -116,6 +115,10 @@ const MedicalFinder = () => {
       setDisease(data?.map((item) => [...disease, item.diseaseName]));
     });
   }, []);
+
+  useEffect(() => {
+    if (seletedHospital) console.log(seletedHospital);
+  }, [seletedHospital]);
 
   return (
     <>
@@ -354,7 +357,6 @@ const MedicalFinder = () => {
                   ]}
                 >
                   <Select
-                    onChange={(options) => setSelectedHospital(options)}
                     placeholder="Choose the hospital"
                     options={hospital?.map((item) => ({
                       label: item[0].hospitalName,
@@ -376,17 +378,6 @@ const MedicalFinder = () => {
                   ]}
                 >
                   <CustomDatePicker />
-                </Form.Item>
-              </div>
-            </div>
-            <div className="flex gap-[20px]">
-              <div className="w-full">
-                <Form.Item
-                  label="Address: "
-                  name="address"
-                  rules={[{ required: true }]}
-                >
-                  <Input disabled />
                 </Form.Item>
               </div>
             </div>
