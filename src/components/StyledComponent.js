@@ -1,5 +1,51 @@
 import styled from "styled-components";
-import { Menu, Select, Pagination, Table } from "antd";
+import { Menu, Select, Pagination, Table, Steps, DatePicker, Form } from "antd";
+
+export const WrapperLogin = styled.div`
+  background-image: url("https://static.vecteezy.com/system/resources/previews/006/998/394/non_2x/blue-abstract-background-blue-background-design-abstract-futuristic-background-free-vector.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  padding: 50px;
+  min-height: 100vh;
+`;
+
+export const ContainerLogin = styled.div`
+  height: calc(100vh - 100px);
+  background: white;
+  display: flex;
+  padding: 45px;
+  border: 1px solid #d9d9d9;
+  border-radius: 0.25rem;
+  width: 100%;
+  box-shadow: 1px 1px 5px 1px #d9d9d9;
+`;
+
+export const FormLogin = styled(Form)`
+  & input.ant-input {
+    padding: 8px 14px 8px 14px !important;
+  }
+  & .ant-picker {
+    width: 100%;
+  }
+  & .ant-picker-input {
+    padding: 4px;
+  }
+  & .ant-form-item {
+    margin: 0px;
+    margin-bottom: 10px;
+  }
+
+  & span.ant-input-affix-wrapper.ant-input-password {
+    padding: 0px 11px 0px 0px !important;
+  }
+`;
+
+export const FormInput = styled(Form)`
+  .ant-input[disabled] {
+    color: black;
+  }
+`;
 
 export const CustomSelect = styled(Select)`
   &:hover {
@@ -137,4 +183,17 @@ export const CustomPagination = styled(Pagination)`
     border-radius: 0 !important;
     font-size: 13px !important;
   }
+`;
+
+export const CustomSteps = styled(Steps)`
+  & .ant-steps-item-title {
+    font-size: 1.25rem;
+  }
+  & .ant-steps-item-description {
+    font-size: 0.9rem;
+  }
+`;
+
+export const CustomDatePicker = styled(DatePicker)`
+  width: 100% !important;
 `;

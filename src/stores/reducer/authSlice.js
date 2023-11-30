@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { STATUS } from "../../ultils/constant";
 import {
   getUserInfo,
   setUserInfo,
@@ -11,10 +10,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     isLoggedIn: getUserInfo() ? true : false,
-    isRegister: false,
     userInfo: getUserInfo() ? getUserInfo() : "{}",
-    loginStatus: STATUS.IDLE,
-    signUpStatus: STATUS.IDLE,
   },
   reducers: {
     loginSuccess: (state, action) => {
@@ -28,26 +24,10 @@ const authSlice = createSlice({
       removeToken();
       removeUserInfo();
     },
-
-    registerSuccess: (state, action) => {
-      state.isRegister = action.payload;
-    },
-    setLoginStatus: (state, action) => {
-      state.loginStatus = action.payload;
-    },
-    setSignUpStatus: (state, action) => {
-      state.signUpStatus = action.payload;
-    },
   },
 });
 
-export const {
-  setLoginStatus,
-  setSignUpStatus,
-  loginSuccess,
-  logoutSuccess,
-  registerSuccess,
-} = authSlice.actions;
+export const { loginSuccess, logoutSuccess } = authSlice.actions;
 
 export default authSlice.reducer;
 export const selectAuth = (state) => state.auth;
