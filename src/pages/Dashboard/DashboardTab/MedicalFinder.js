@@ -20,13 +20,14 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from "../../paths";
 import { useAuth } from "../../../context/AuthProvider";
 import http from "../../../ultils/httpConfig";
+import moment from "moment";
 
 const MedicalFinder = () => {
   const { userInfo } = useAuth();
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState({
-    lat: 10.811596857085577,
-    lng: 106.62712326427012,
+    lat: null,
+    lng: null,
   });
   const [hospital, setHospital] = useState([]);
   const [address, setAddress] = useState("");
@@ -34,6 +35,8 @@ const MedicalFinder = () => {
   const [name, setName] = useState("");
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [dataForm1, setDataForm1] = useState();
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -51,23 +54,20 @@ const MedicalFinder = () => {
   };
 
   const onFinish = (values) => {
-    console.log("Form data:", values);
+    setDataForm1(form.getFieldsValue());
     http
       .post("/hospital/recommend", {
         symptoms: values.disease,
         address: [position.lng, position.lat],
       })
       .then((response) => {
-        console.log({
-          symptoms: values.disease,
-          address: [position.lng, position.lat],
-        });
         const data = response.data.messagse;
         console.log(data);
         setHospital(
           data?.map((item) => [
             ...hospital,
             {
+              id: item.id,
               hospitalName: item.name,
               hospitalAddress: [item.address[0], item.address[1]],
             },
@@ -79,13 +79,7 @@ const MedicalFinder = () => {
   };
 
   useEffect(() => {
-    console.log(hospital);
-  }, [hospital]);
-
-  const [seletedHospital, setSelectedHospital] = useState();
-
-  useEffect(() => {
-    const apiUrl = `https://geocode.maps.co/reverse?lat=${position.lat}&lon=${position.lng}`;
+    const apiUrl = `https://geocode.maps.co/reverse?lat=${position?.lat}&lon=${position?.lng}`;
     fetch(apiUrl)
       .then((response) => {
         if (!response.ok) {
@@ -99,9 +93,30 @@ const MedicalFinder = () => {
       .catch((error) => console.error("Error fetching data:", error));
   }, [position]);
 
+  useEffect(() => {
+    if (userInfo) {
+      setPosition({
+        lat: userInfo?.address?.[0] + 5,
+        lng: userInfo?.address?.[1],
+      });
+    }
+  }, [userInfo]);
+
   ///////// FORM 2
 
   const onFinishStep2 = (values) => {
+    const body = {
+      hospitalId: values.hospital,
+      patientPhoneNumber: userInfo?.phone,
+      date: new Date(values.date),
+      symptomsList: dataForm1.disease,
+      medicalRecord: dataForm1.medicalRecord,
+    };
+
+    http.post("/appointment/create-appointment", body).then((response) => {
+      console.log(response);
+    });
+
     notification.success({
       message: "Success",
       description: "Make a appointment successfully!",
@@ -115,10 +130,6 @@ const MedicalFinder = () => {
       setDisease(data?.map((item) => [...disease, item.diseaseName]));
     });
   }, []);
-
-  useEffect(() => {
-    if (seletedHospital) console.log(seletedHospital);
-  }, [seletedHospital]);
 
   return (
     <>
@@ -143,6 +154,7 @@ const MedicalFinder = () => {
           </div>
           <FormInput
             name="personalHealthForm"
+            form={form}
             layout="vertical"
             onFinish={onFinish}
             onFinishFailed={() => {
@@ -158,6 +170,22 @@ const MedicalFinder = () => {
                 name: ["address"],
                 value: address,
               },
+              {
+                name: ["name"],
+                value: userInfo?.fullName,
+              },
+              {
+                name: ["phone"],
+                value: userInfo?.phone,
+              },
+              {
+                name: ["gender"],
+                value: userInfo?.gender,
+              },
+              {
+                name: ["dob"],
+                value: moment(new Date(userInfo?.dob)),
+              },
             ]}
           >
             <div className="flex gap-[20px]">
@@ -169,7 +197,10 @@ const MedicalFinder = () => {
                     { required: true, message: "Please type your name!" },
                   ]}
                 >
-                  <Input placeholder="Type your name" />
+                  <Input
+                    value={userInfo.fullName}
+                    placeholder="Type your name"
+                  />
                 </Form.Item>
               </div>
 
@@ -340,12 +371,6 @@ const MedicalFinder = () => {
               });
             }}
             style={{ position: "relative" }}
-            fields={[
-              {
-                name: ["address"],
-                value: "address hospital",
-              },
-            ]}
           >
             <div className="flex gap-[20px]">
               <div className="w-6/12">
@@ -360,7 +385,7 @@ const MedicalFinder = () => {
                     placeholder="Choose the hospital"
                     options={hospital?.map((item) => ({
                       label: item[0].hospitalName,
-                      value: item[0].hospitalName,
+                      value: item[0].id,
                     }))}
                   />
                 </Form.Item>

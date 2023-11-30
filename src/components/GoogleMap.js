@@ -23,10 +23,10 @@ const Map = ({ position, setPosition }) => {
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
         onClick={(value) => {
-          setPosition({ lat: value.lat, lng: value.lng });
+          setPosition({ lat: value?.lat, lng: value?.lng });
         }}
       >
-        <AnyReactComponent lat={position.lat} lng={position.lng} />
+        <AnyReactComponent lat={position?.lat} lng={position?.lng} />
       </GoogleMapReact>
     </div>
   );

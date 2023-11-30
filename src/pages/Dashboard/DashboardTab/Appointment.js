@@ -8,7 +8,6 @@ import { useAuth } from "../../../context/AuthProvider";
 const Appointment = () => {
   const [appoinment, setAppointment] = useState([]);
   const { userInfo } = useAuth();
-  const [address, setAddress] = useState([]);
   useEffect(() => {
     if (userInfo.phone) {
       http
@@ -20,43 +19,48 @@ const Appointment = () => {
     }
   }, [userInfo]);
 
+  const [address, setAddress] = useState({});
+  /* 
   useEffect(() => {
-    if (appoinment) {
-      setAddress(
-        appoinment?.map((cur) => {
-          if (cur.hospitalAddress) {
-            const apiUrl = `https://geocode.maps.co/reverse?lat=${cur.hospitalAddress[0]}&lon=${cur.hospitalAddress[1]}`;
-            fetch(apiUrl)
-              .then((response) => {
-                if (!response.ok) {
-                  throw new Error(
-                    `Network response was not ok: ${response.status}`
-                  );
-                }
-                return response.json();
-              })
-              .then((data) => {
-                setAddress([...address, data.display_name]);
-              })
-              .catch((error) => console.error("Error fetching data:", error));
-          }
-        }, [])
-      );
+    if (appoinment.length > 0) {
+      const fetchAddress = async () => {
+        let i = 0;
+        for (const item of appoinment) {
+          const apiUrl = `https://geocode.maps.co/reverse?lat=${item?.[0]}&lon=${item?.[1]}`;
+          await fetch(apiUrl, { mode: "no-cors" })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  `Network response was not ok: ${response.status}`
+                );
+              }
+              return response.json();
+            })
+            .then((data) => {
+              setAddress({
+                ...address,
+                [i]: data.display_name,
+              });
+              i++;
+              console.log(data);
+            })
+            .catch((error) => console.error("Error fetching data:", error));
+        }
+      };
+      fetchAddress();
     }
-  }, [appoinment]);
+  }, [appoinment]); */
 
-  useEffect(() => {
-    if (address) address?.map((item, index) => console.log(item, index));
-  }, [address]);
+  console.log(address);
 
   return (
     <div>
       {appoinment?.map((item, index) => {
         const timeAgo = moment(item.date).fromNow();
         const date = moment(item.date).format("DD/MM/YYYY");
-        const medicalRecord =
-          "Tiền sử bệnh cá nhân: Bao gồm thông tin chi tiết về tất cả những vấn đề sức khỏe mà người bệnh trãi qua trong lịch sử cuộc sống của họ. Cần thiết khai thác chi tiết về các bất thường về sức khỏe. Nếu có, thời gian phát hiện bệnh, nếu là bệnh mạn tính, việc chi tiết về điều trị: Thuốc, sự tuân thủ điều trị và các hỗ trợ qua chế độ ăn, thói quen sinh hoạt của bệnh nhân là rất quan trọng.";
+        const medicalRecord = item.medicalRecord;
         const disease = item.symptomsList;
+
         return (
           <div className="mb-6 px-6 py-8 border border-[#c3c3c3] rounded">
             <div className="flex items-center mb-6 justify-between">
@@ -84,9 +88,9 @@ const Appointment = () => {
               <span className="font-medium">Medical record: </span>{" "}
               {medicalRecord}
             </div>
-            <div>
+            {/* <div>
               <span className="font-medium">Address: </span> {address[index]}
-            </div>
+            </div> */}
           </div>
         );
       })}

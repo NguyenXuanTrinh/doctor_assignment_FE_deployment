@@ -17,7 +17,6 @@ http.interceptors.request.use((config) => {
   const token = localStorage.getItem(LOCAL_ITEM.ACCESS_TOKEN)
     ? localStorage.getItem(LOCAL_ITEM.ACCESS_TOKEN)
     : sessionStorage.getItem(LOCAL_ITEM.ACCESS_TOKEN);
-  console.log(token);
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
