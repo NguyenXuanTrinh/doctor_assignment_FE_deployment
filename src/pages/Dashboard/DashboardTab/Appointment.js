@@ -9,7 +9,7 @@ const Appointment = () => {
   const [appoinment, setAppointment] = useState([]);
   const { userInfo } = useAuth();
   useEffect(() => {
-    if (userInfo.phone) {
+    if (userInfo?.phone) {
       http
         .post(getAppoinmentAPI, {
           phoneNumber: userInfo.phone,
