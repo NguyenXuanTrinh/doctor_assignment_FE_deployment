@@ -21,9 +21,11 @@ import { PATH } from "../../paths";
 import { useAuth } from "../../../context/AuthProvider";
 import http from "../../../ultils/httpConfig";
 import moment from "moment";
+import { LOCAL_ITEM } from "../../../ultils/constant";
 
 const MedicalFinder = () => {
-  const { userInfo } = useAuth();
+  const [userInfo, setUserInfo] = useState({})
+  // const { userInfo } = useAuth();
   const [step, setStep] = useState(0);
   const [position, setPosition] = useState({
     lat: null,
@@ -129,6 +131,9 @@ const MedicalFinder = () => {
       const data = response.data.messagse;
       setDisease(data?.map((item) => [...disease, item.diseaseName]));
     });
+
+    const cloneUserInfo = JSON.parse(localStorage.getItem(LOCAL_ITEM.USER_INFO));
+    setUserInfo(cloneUserInfo)
   }, []);
 
   return (
